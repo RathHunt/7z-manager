@@ -221,10 +221,17 @@ async def progress_bar(current, total, status_msg, start, msg, filename):
         time_to_complete = humanize.naturaldelta(time_to_complete)
         progressbar = "[{0}{1}]".format(
             ''.join(["🟢" for i in range(math.floor(percentage / 10))]),
-            ''.join(["⚫" for i in range(10 - math.floor(percentage / 10))])
-        )
+            ''.join(["⚫" for i in range(10 - math.floor(percentage / 10))]))
+
+        try:
+            await msg.edit(current_message)  # Attempt to send the message
+        except FloodWaitError as e:
+            await asyncio.sleep(e.10)  # Pause for the specified wait time
+            await msg.edit(current_message)  # Retry sending the message
+        
         current_message = f"""**{status_msg} {filename}** {round(percentage, 2)}%
 {progressbar}
+
 
 **⚡ Speed**: {humanize.naturalsize(speed)}/s
 **📚 Done**: {humanize.naturalsize(current)}
