@@ -214,7 +214,7 @@ async def upload_file(user_id: str, file: str, progress_message: Message):
 
 async def progress_bar(current, total, status_msg, start, msg, filename):
     present = time.time()
-    if round((present - start) % 3) == 0 or current == total:
+    if round((present - start) % 10) == 0 or current == total:
         speed = current / (present - start)
         percentage = current * 100 / total
         time_to_complete = round(((total - current) / speed))
@@ -222,12 +222,6 @@ async def progress_bar(current, total, status_msg, start, msg, filename):
         progressbar = "[{0}{1}]".format(
             ''.join(["🟢" for i in range(math.floor(percentage / 10))]),
             ''.join(["⚫" for i in range(10 - math.floor(percentage / 10))]))
-
-        try:
-            await msg.edit(current_message)  # Attempt to send the message
-        except FloodWaitError as e:
-            await asyncio.sleep(e.seconds, 10)  # Pause for the specified wait time
-            await msg.edit(current_message)  # Retry sending the message
         
         current_message = f"""**{status_msg} {filename}** {round(percentage, 2)}%
 {progressbar}
