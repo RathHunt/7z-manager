@@ -226,7 +226,7 @@ async def progress_bar(current, total, status_msg, start, msg, filename):
         try:
             await msg.edit(current_message)  # Attempt to send the message
         except FloodWaitError as e:
-            await asyncio.sleep(e.10)  # Pause for the specified wait time
+            await asyncio.sleep(e.seconds, 10)  # Pause for the specified wait time
             await msg.edit(current_message)  # Retry sending the message
         
         current_message = f"""**{status_msg} {filename}** {round(percentage, 2)}%
